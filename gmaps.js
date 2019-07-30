@@ -103,14 +103,14 @@ function collectXML (position) {
         var request = window.ActiveXObject ?
             new ActiveXObject('Microsoft.XMLHTTP') :
             new XMLHttpRequest;
-
+        request.withCredentials = true;
         request.onreadystatechange = function() {
-          if (request.readyState == 4) {
+          if (request.readyState == 2) {
             request.onreadystatechange = doNothing;
             callback(request, request.status);
           }
         };
-
+        request.setRequestHeader('Content-Type', 'application/json');
         request.open('POST', url, true);
         request.send(null);
       }
@@ -230,6 +230,3 @@ function getCookie(cname) {
   }
   return "";
 }
-
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC6nPPAMCGMzGcTS-HOkT1FXCJ3AqwV2V4&libraries=places&callback=honey"
-  async defer></script>
