@@ -23,7 +23,7 @@ function glaze(address) {
 
 function collectXML (position) {
         var t = position.coords;
-        if (document.cookie.length == 4) {
+        if (countCookies() > 4) {
           var lt = encodeURIComponent(t.latitude);
           var lg = encodeURIComponent(t.longitude);
           console.log(getCookie('addr'));

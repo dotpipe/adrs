@@ -185,8 +185,9 @@ $fjs .= "javascript:setCookie('type',document.getElementById('type').value,20);"
 ?>
 <section style="background-color:lightgray">
 <div id="horizontal-mobi" style="width:100%;height:70px;position:fixed;background-image:url('blacksand.jpg')">
-<b style="font-size:38;color:gray">Welcome to Diads!</b>
+<b style="font-size:38;color:gray">Welcome to Diads!</b><br>
 <form method="GET">
+<b style="color:gray;">Enter your company's contact information : </b>
 <input id="name" type="text" name="name" placeholder="Contact Person">
 <input id="biz" type="text" name="biz" placeholder="Name of Business">
 <input id="pac-input" name="address" type="text" placeholder="St. No, Street, City, State, Zip, Country">
@@ -217,7 +218,7 @@ $fjs .= "javascript:setCookie('type',document.getElementById('type').value,20);"
   ?>
     <div class="horizontal-mobi" style="margin-top:<?=($j+1)*400?>;width:<?=$t?>;padding-bottom:17px;background-color:gray;overflow:visible;">
 
-     <div class="table-mobi">
+    <div class="table-mobi">
 
 <?php for ($i = 0 ; $i < count($serial[$j]) ; $i++) { ?>
     <article name="" serial="<?=$serial[$j][$i]?>" class="card" style="margin-top:<?=($i)*400?>;background-color:gray;width:400px;border-radius: 10px;border: 5px solid lightgray;">
@@ -229,8 +230,8 @@ $fjs .= "javascript:setCookie('type',document.getElementById('type').value,20);"
 
     </article>
 <?php } ?>
-  </div>
-  </div></section>
+    </div>
+    </div></section>
 
 <?php 
 }
