@@ -177,6 +177,7 @@ function callback(results, status) {
     }
   }
 }
+
 function createMarker(place) {
   var marker = new google.maps.Marker({
     map: map,
@@ -199,6 +200,7 @@ function createMarker(place) {
     infowindow.open(map, this);
     });
 }
+
 function revitup(i,ts) {
     var rt = 0;
     var card = document.getElementsByTagName("article");
@@ -227,7 +229,6 @@ function review(i,ts) {
   document.body.appendChild(s);
 }
 
-
 function confirm_star(i,ts) {
 
   if (confirm("You chose " + i + " stars!")) {
@@ -243,7 +244,6 @@ function setCookie(cname, cvalue, exdays) {
   var expires = "expires="+ d.toUTCString();
   document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
 }
-
 
 function countCookies() {
   var decodedCookie = decodeURIComponent(document.cookie);
@@ -327,7 +327,6 @@ function move() {
     }
   }
 
-
   function fillMenu(i) {
     document.getElementById("menu-article").innerHTML = i.substring(1,i.length-2);
   }
@@ -335,12 +334,31 @@ function move() {
   function menuList(i) {
     fetch(i, function() {})
       .then(function(response){
+      //  console.log(response.json());
       return response.json();
       })
       .then(function(j) {
+        
         fillMenu(JSON.stringify(j));
-        if (i === "newclient.php")
-          honey();
+      });
+      if (i === "newclient.php")
+        honey();
+  }
+
+  function fillChat(i) {
+    document.getElementById("chatwindow").style.wordWrap = "true";
+
+    document.getElementById("chatwindow").innerText = i.substring(1,i.length-2);
+  }
+  
+  function cheriWindow(i) {
+    var url = 'fmcht.php?' + i;
+    fetch(url, function() {})
+      .then(function(response){
+      return response.json();
+      })
+      .then(function(j) {
+        fillChat(JSON.stringify(j));
       });
   }
   

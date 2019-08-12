@@ -189,6 +189,7 @@ function move() {
       elem.style.width = width + '%'; 
     }
   }
+  menuList('menu.php');
 }
 
 function mapView() {
@@ -256,18 +257,8 @@ function mapView() {
 </div>
 </div>
 </section>
-
-
-<!-- Create form for menu -->
 <?php
-$menu = '
-  <h3>Menu</h3>
-  <li>
-    <ul onclick="menuList(\'newclient.php\');">Look at me!</ul>
-  </li>
-';
-
-
+$menu = '<h3 onclick="menuList(\'menu.php\');">Menu</h3><li><b style="font-size:18px;color:lightgray" onclick="javascript:mapView()">Click to Toggle Map</b><ul onclick=menuList(\'newclient.php\');>Add Store</ul><ul onclick=menuList(\'storechat.php\');>Cheri</ul><ul onclick="menuList(\'preorder.php\');">Preorder</ul></li>';
 ?>
 <!--  side menu -->
 <section id="menu" style="display:none">
