@@ -22,132 +22,153 @@ function glaze(address) {
 }
 
 function collectXML (position) {
-        var t = position.coords;
-        if (countCookies() > 4) {
-          var lt = encodeURIComponent(t.latitude);
-          var lg = encodeURIComponent(t.longitude);
-          console.log(getCookie('addr'));
-          var b = encodeURI("marker.php?address=" + getCookie('addr') + "&lat=" + lt + "&long=" + lg + "&business=" + getCookie('biz') + "&name=" + getCookie('name') + "&type=" + getCookie('type');
-          passPOST(b);
-          setCookie('addr',"");
-          setCookie('biz',"");
-          setCookie('name',"");
-          setCookie('type',"");
-        }
-        var map = new google.maps.Map(
-      document.getElementById('map'),
-      {center: {lat: position.coords.latitude, lng: position.coords.longitude}, zoom: 13});
+  var t = position.coords;
+  /*
+  if (countCookies() > 4) {
+    var lt = encodeURIComponent(t.latitude);
+    var lg = encodeURIComponent(t.longitude);
+    console.log(getCookie('addr'));
+    var b = encodeURI("marker.php"); //?address=" + getCookie('address') + "&lat=" + lt + "&long=" + lg + "&business=" + getCookie('business') + "&name=" + getCookie('name') + "&type=" + getCookie('type'));
+    passPOST(b);
+    setCookie('addr',"");
+    setCookie('biz',"");
+    setCookie('name',"");
+    setCookie('type',"");
+  }
+  */
+  var map = new google.maps.Map(
+    document.getElementById('map'),
+    {center: {lat: position.coords.latitude, lng: position.coords.longitude}, zoom: 13});
 
-    var input = document.getElementById('pac-input');
+  var input;
+  var autocomplete;
+  if (null != document.getElementById('addr')) {
+    input = document.getElementById('addr');
 
     autocomplete = new google.maps.places.Autocomplete(input);
 
-    autocomplete.bindTo('bounds', map);
-
     // Specify just the place data fields that you need.
     autocomplete.setFields(['place_id', 'geometry', 'name', 'formatted_address']);
+  }
+  var infowindow = new google.maps.InfoWindow();
+  var infowindowContent = document.getElementById('infowindow-content');
+  infowindow.setContent(infowindowContent);
 
-    map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+  // Change this depending on the name of your PHP or XML file
+  downloadUrl('stores.xml', function(data) {
+    var xml = data.responseXML;
+    var markers = xml.documentElement.getElementsByTagName('marker');
+    Array.prototype.forEach.call(markers, function(markerElem) {
+      var id = markerElem.getAttribute('id');
+      var name = markerElem.getAttribute('name');
+      var address = markerElem.getAttribute('address');
+      var biz = markerElem.getAttribute('business');
+      var type = markerElem.getAttribute('type');
+      var point = new google.maps.LatLng(
+          parseFloat(markerElem.getAttribute('lat')),
+          parseFloat(markerElem.getAttribute('long')));
 
-    var infowindow = new google.maps.InfoWindow();
-    var infowindowContent = document.getElementById('infowindow-content');
-    infowindow.setContent(infowindowContent);
+      var infowincontent = document.createElement('div');
+      var strong = document.createElement('strong');
+      strong.textContent = name
+      infowincontent.appendChild(strong);
+      infowincontent.appendChild(document.createElement('br'));
 
-          // Change this depending on the name of your PHP or XML file
-          downloadUrl('stores.xml', function(data) {
-            var xml = data.responseXML;
-            var markers = xml.documentElement.getElementsByTagName('marker');
-            Array.prototype.forEach.call(markers, function(markerElem) {
-              var id = markerElem.getAttribute('id');
-              var name = markerElem.getAttribute('name');
-              var address = markerElem.getAttribute('address');
-              var biz = markerElem.getAttribute('business');
-              var type = markerElem.getAttribute('type');
-              var point = new google.maps.LatLng(
-                  parseFloat(markerElem.getAttribute('lat')),
-                  parseFloat(markerElem.getAttribute('long')));
+      var text = document.createElement('text');
+      text.textContent = address
+      infowincontent.appendChild(text);
+      geocoder = new google.maps.Geocoder();
+      geocoder.geocode({ 'address': address }, function(results, status) {
+      if (status == google.maps.GeocoderStatus.OK) {
+        //map.setCenter(results[0].geometry.location);
+        var marker = new google.maps.Marker({
+          map: map,
+          position: results[0].geometry.location
+        });
+        
+        var infowindow = new google.maps.InfoWindow({
+          content: "<p onclick='mapView();'><u>" + name + "</u>&nbsp;&nbsp;&nbsp;&nbsp;<br><u>" + biz + "</u>&nbsp;&nbsp;&nbsp;&nbsp;<br><u>" + type + "</u>&nbsp;&nbsp;&nbsp;&nbsp;</p><br>",
 
-              var infowincontent = document.createElement('div');
-              var strong = document.createElement('strong');
-              strong.textContent = name
-              infowincontent.appendChild(strong);
-              infowincontent.appendChild(document.createElement('br'));
-
-              var text = document.createElement('text');
-              text.textContent = address
-              infowincontent.appendChild(text);
-              geocoder = new google.maps.Geocoder();
-              geocoder.geocode({ 'address': address }, function(results, status) {
-              if (status == google.maps.GeocoderStatus.OK) {
-                //map.setCenter(results[0].geometry.location);
-                var marker = new google.maps.Marker({
-                  map: map,
-                  position: results[0].geometry.location
-                });
-                
-                var infowindow = new google.maps.InfoWindow({
-                  content: "<p>" + name + "&nbsp;&nbsp;&nbsp;&nbsp;<br>" + biz + "&nbsp;&nbsp;&nbsp;&nbsp;<br>" + type + "&nbsp;&nbsp;&nbsp;&nbsp;</p><br>",
-
-                });
-                marker.addListener('click', function() {
-                  infowindow.open(map, marker)
-                });
-              }
+        });
+        marker.addListener('click', function() {
+          infowindow.open(map, marker);
+          fetch('test.php', function() {})
+            .then(function(response){
+              return response.json();
+            })
+            .then(function(myJson) {
+              console.log(JSON.stringify(myJson));
+              //mapView();
+              //call in code to get deals here
             });
-            glaze(address);
-          });
+              
         });
       }
+    });
+    glaze(address);
+  });
+});
+}
+function downloadUrl(url, callback) {
+  var request = window.ActiveXObject ?
+    new ActiveXObject('Microsoft.XMLHTTP') :
+    new XMLHttpRequest;
 
-        function downloadUrl(url, callback) {
-        var request = window.ActiveXObject ?
-            new ActiveXObject('Microsoft.XMLHTTP') :
-            new XMLHttpRequest;
-        request.withCredentials = true;
-        request.onreadystatechange = function() {
-          if (request.readyState == 2) {
-            request.onreadystatechange = doNothing;
-            callback(request, request.status);
-          }
-        };
-        request.setRequestHeader('Content-Type', 'application/json');
-        request.open('POST', url, true);
-        request.send(null);
-      }
+  request.onreadystatechange = function() {
+    if (request.readyState == 4) {
+      request.onreadystatechange = doNothing;
+      callback(request, request.status);
+    }
+  };
 
-      function doNothing() {}
+  request.open('POST', url, true);
+  request.send(null);
+}
+
+function doNothing() {}
 
 
-      function passPOST(url) {
-        var request = window.ActiveXObject ?
-            new ActiveXObject('Microsoft.XMLHTTP') :
-            new XMLHttpRequest;
+function passPOST(url) {
+  var request = window.ActiveXObject ?
+    new ActiveXObject('Microsoft.XMLHTTP') :
+    new XMLHttpRequest;
 
-        request.onreadystatechange = function() {
-          if (request.readyState == 4) {
-            request.onreadystatechange = doNothing;
-          }
-        };
-
-        request.open('GET', url, true);
-        request.send(null);
-      }
+  request.onreadystatechange = function() {
+    if (request.readyState == 4) {
+      request.onreadystatechange = doNothing;
+    }
+  };
+  request.open('GET', url, true);
+  request.send(null);
+}
 
 var map;
 var service;
 var infowindow;
 
-function callback2(results, status) {
-  if (status == google.maps.places.PlacesServiceStatus.OK) {
-    var marker = new google.maps.Marker({
-      map: map,
-      place: {
-        placeId: results[0].place_id,
-        location: results[0].geometry.location
-      }
-    });
+function mapView() {
+  var p = document.getElementById("page");
+  var t = document.getElementById("map");
+  var f = document.getElementById("following");
+  if (p.index != "-1") {
+    f.style.top = t.style.height + "px";
+    f.style.index = "-1";
+    f.style.style = "margin-top:" + t.style.height + "px;width:100%;z-index:-1;background:url('blacksand.jpg');position:static;";
+    p.index = "-1";
+
+    //t.style = "position:relative;z-index:1;";
+    t.parentNode.style = "z-index:-1;height:100%;overflow:none;position:fixed;width:100%;";
   }
+  else {
+    f.style.index = "-1";
+    f.style.style = "margin-top:105px;width:100%;z-index:1;background:url('blacksand.jpg');position:static;";
+    p.index = "1";
+    //t.style = "position:relative;z-index:-2;";
+    t.parentNode.style = "z-index:1;height:100%;overflow:none;position:fixed;width:100%;";
+  }
+  //t.style.height = (0.50 * screen.height) + "px";
 }
+
 function callback(results, status) {
   if (status == google.maps.places.PlacesServiceStatus.OK) {
     for (var i = 0; i < results.length; i++) {
@@ -165,7 +186,15 @@ function createMarker(place) {
   });
 
   google.maps.event.addListener(marker, 'click', function() {
-    console.log(infowindow);
+    console.log(this);
+    fetch('test.php')
+    .then(function(response) {
+      console.log(response);
+      return response.json();
+    })
+    .then(function(myJson) {
+      console.log(JSON.stringify(myJson));
+    });
     infowindow.setContent(place.name);
     infowindow.open(map, this);
     });
@@ -175,8 +204,8 @@ function revitup(i,ts) {
     var card = document.getElementsByTagName("article");
     for (let s = 0 ; s < card.length ; s++) {
         if (card[s].getAttribute("serial") == ts) {
-            rt = s;
-            break;
+    rt = s;
+    break;
         }
     }
     
@@ -215,6 +244,13 @@ function setCookie(cname, cvalue, exdays) {
   document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
 }
 
+
+function countCookies() {
+  var decodedCookie = decodeURIComponent(document.cookie);
+  var ca = decodedCookie.split(';');
+  return ca.length;
+}
+
 function getCookie(cname) {
   var name = cname + "=";
   var decodedCookie = decodeURIComponent(document.cookie);
@@ -230,3 +266,81 @@ function getCookie(cname) {
   }
   return "";
 }
+
+function move() {
+  var elem = document.getElementById("myBar"); 
+  var width = 1;
+  var id = setInterval(frame, 10);
+  function frame() {
+    if (width >= 100) {
+      clearInterval(id);
+      document.getElementById("myProgress").style.display = "none";
+    } else {
+      width++; 
+      elem.style.width = width + '%'; 
+    }
+  }
+}
+//if (document.readyState === 'loading')
+
+  function fixheight() {
+    var t = document.getElementsByClassName("horizontal-mobi")[1];
+        
+    var h = t.childNodes[1];
+    //if (h.style.height !== undefined)
+    console.log(h);
+  }
+
+  function mapView() {
+    var p = document.getElementById("page");
+    var t = document.getElementById("map");
+    var f = document.getElementById("following");
+    if (p.index != "-1") {
+      f.style.top = t.style.height + "px";
+      f.style.index = "-1";
+      f.style.style = "margin-top:" + t.style.height + "px;width:100%;z-index:-1;background:url('blacksand.jpg');position:static;";
+      p.index = "-1";
+
+      //t.style = "position:relative;z-index:1;";
+      t.parentNode.style = "z-index:-1;height:100%;overflow:none;position:fixed;width:100%;";
+    }
+    else {
+      f.style.index = "-1";
+      f.style.style = "margin-top:105px;width:100%;z-index:1;background:url('blacksand.jpg');position:static;";
+      p.index = "1";
+      //t.style = "position:relative;z-index:-2;";
+      t.parentNode.style = "z-index:1;height:100%;overflow:none;position:fixed;width:100%;";
+    }
+    //t.style.height = (0.50 * screen.height) + "px";
+  }
+
+  function menuslide() {
+    if (document.getElementById('menu').style.display == "table-cell") {
+      document.getElementById('menu').style.display = "none";
+      document.getElementById('page').style.left = "0px";
+      document.getElementById('map').style.left = "0px";
+    }
+    else {
+      document.getElementById('menu').style.display = "table-cell";
+      document.getElementById('page').style.left = "305px";
+      document.getElementById('map').style.left = "295px";
+    }
+  }
+
+
+  function fillMenu(i) {
+    document.getElementById("menu-article").innerHTML = i.substring(1,i.length-2);
+  }
+  
+  function menuList(i) {
+    fetch(i, function() {})
+      .then(function(response){
+      return response.json();
+      })
+      .then(function(j) {
+        fillMenu(JSON.stringify(j));
+        if (i === "newclient.php")
+          honey();
+      });
+  }
+  

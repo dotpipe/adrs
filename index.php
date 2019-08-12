@@ -3,6 +3,9 @@ header("X-Content-Type-Options: nosniff");
 header("Content-Type: text/html");
 session_start();
 
+//if(!isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] != 'on') 
+  //  header("Location: https://www.diads.co/");
+
 $Storename[] = "Sal's Party Store";
 $Storename[] = "Hal's Example Store";
 $Storename[] = "Hale-Bopp Comedty Shop Examples";
@@ -14,11 +17,11 @@ $Storeslogan[] = "Behind the Moon!";
 // array_merge_recursive()
 
 $serial[0][0] = "134123";
-$serial[0][1] = "13412";
+$serial[0][1] = "1342";
 $serial[0][2] = "13413";
-$serial[0][3] = "134123";
+$serial[0][3] = "34123";
 $serial[0][4] = "13412";
-$serial[0][5] = "13413";
+$serial[0][5] = "1343";
 $serial[1][0] = "13123";
 $serial[1][1] = "13423";
 $serial[2][0] = "14123";
@@ -31,22 +34,30 @@ $serial[2][0] = "14123";
 Diads - Follow your Best Deals
 </title>
 <style>
+  div #menu {
+    top:110px;
+    position: fixed;
+    width:350px;
+    z-index: 1 !important;
+  }
   #map {
+    top:95px;
+    position:relative;
     height: 100%;
-    width: 400;
+    width: 100%;
   }
   html, body {
     height: 100%;
-    margin: 0;
-    padding: 0;
+    margin: 0px;
+    padding: 0px;
   }
   // This container element gives us the scrollbars we want.
 div.horizontal {
     width: 410px;
     height: 120px;
     overflow: auto;
-    padding-bottom: 17px;
 }
+
 @import "reset.css";
 
 /* Scroll bar */
@@ -84,50 +95,31 @@ div.horizontal {
 }
 div.horizontal-mobi {
   display: block;
-  width: 100%;
-  height: 100%;
+  width: 750px;
+  height: 75%;
   overflow: auto;
 }
 div.horizontal-mobi .table-mobi {
   display: table;
-  table-layout: fixed;
-  width: 100%;
+  table-layout: static;
+  width: 750px;
 }
 div.horizontal-mobi .table-mobi article {
-  width: 100%;
+  width: 750px;
   height: 325px;
   display: table-cell;
   background: gray;
   vertical-align: middle;
   text-align: center;
-    padding-bottom: 17px;
 }
-/*
-div.horizontal-mobi .table-mobi article:nth-child(2n+2) {
-  background: #d1d1d1;
-}
-*/
-div.horizontal {
-  display: block;
-  width: 400px;
-  height: 325px;
-  overflow: auto;
-}
-div.horizontal1 .table1 {
-  display: table;
-  table-layout: fixed;
+
+div.horizontal-mobi .table-mobi dd {
   width: 100%;
-}
-div.horizontal1 .table1 article {
-  width: 500px;
-  height: 325px;
+  height: 100%;
   display: table-cell;
-  background: #e3e3e3;
-  vertical-align: top;
+  vertical-align: middle;
   text-align: center;
-}
-div.horizontal1 .table1 article:nth-child(2n+2) {
-  background: #d1d1d1;
+  margin-left:0px;
 }
 
 body {
@@ -153,7 +145,7 @@ header#pageheader {
   padding-left: 24px;
 }
 .horizontal-track2 {
-  width: 100%;
+  width: 750px;
   height: 17px;
   background: #b4b4b4;
 }
@@ -167,79 +159,165 @@ header#pageheader {
 .horizontal .right {
   display: hidden;
 }
+
+#myProgress {
+  z-index:3;
+  width: 100%;
+  background-color: grey;
+}
+
+#myBar {
+  height: 10px;
+  width: 1%;
+  background-color: blue;
+}
+
 </style>
 
+<script>
 
-<script src="gmaps.js">
+function move() {
+  var elem = document.getElementById("myBar"); 
+  var width = 1;
+  var id = setInterval(frame, 10);
+  function frame() {
+    if (width >= 100) {
+      clearInterval(id);
+      document.getElementById("myProgress").style.display = "none";
+    } else {
+      width++; 
+      elem.style.width = width + '%'; 
+    }
+  }
+}
+
+function mapView() {
+    var p = document.getElementById("page");
+    var t = document.getElementById("map");
+    var f = document.getElementById("following");
+    if (p.index != "-1") {
+      f.style.top = t.style.height + "px";
+      f.style.index = "-1";
+      f.style.style = "margin-top:95px;width:100%;z-index:-1;background:url('blacksand.jpg');position:static;";
+      p.index = "-1";
+      t.parentNode.style = "z-index:-1;overflow:none;position:fixed;width:100%;";
+      t.style.height = (screen.height - 95) + "px";
+    }
+    else {
+      f.style.index = "-1";
+      f.style.style = "margin-top:95px;width:100%;z-index:1;background:url('blacksand.jpg');position:static;";
+      p.index = "1";
+      t.parentNode.style = "z-index:1;overflow:none;position:fixed;width:100%;";
+      t.style.height = (screen.height - 95) + "px";
+    }
+  }
+
+  function menuslide() {
+    if (document.getElementById('menu').style.display == "table-cell") {
+      document.getElementById('menu').style.display = "none";
+      document.getElementById('page').style.left = "0px";
+      document.getElementById('following').style.left = "0px";
+    }
+    else {
+      document.getElementById('menu').style.display = "table-cell";
+      document.getElementById('page').style.left = "305px";
+      document.getElementById('following').style.left = "295px";
+    }
+  }
+
 </script>
+<script src="gmaps.js"></script>
+
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC6nPPAMCGMzGcTS-HOkT1FXCJ3AqwV2V4&libraries=places&callback=honey"
   async defer></script>
+
 </head>
 
-<body style="background-color:gray;">
+<body style="background:url('blacksand.jpg');" onload="move();">
+<!-- Loading Progress bar -->
+<div id="myProgress" style="position:fixed">
+  <div id="myBar"></div>
+</div>
+
+<!-- Create button for menu open and close -->
+<section style="background:url('blacksand.jpg');z-index:2;position:fixed;">
+<div id="fb-root"></div>
+<div style="background:url('blacksand.jpg');text-align:center;text-align:left;width:100%;margin-left:-1px;margin-top:-8px;height:105px;position:fixed;">
+<div onclick="javascript:menuslide();" style="cursor:pointer;text-align:center;position:fixed;width:65px;">
+<br>
+<hr style="border-radius: 100px;margin-left:10px;text-align:center;height:5px;background:gray;">
+<hr style="border-radius: 100px;margin-left:10px;text-align:center;height:5px;background:gray;">
+<hr style="border-radius: 100px;margin-left:10px;text-align:center;height:5px;background:gray;">
+<hr style="border-radius: 100px;margin-left:10px;text-align:center;height:5px;background:gray;">
+</div>
+
+<div class="horizontal-mobi" style="cursor:default;width:100%;margin-left:75px;height:105px;margin-top:20px;position:fixed;">
+<br><b style="font-size:28px;color:#fefefe">Welcome to Diads!</b>
+</div>
+</div>
+</section>
+
+
+<!-- Create form for menu -->
 <?php
-$fjs = "javascript:setCookie('addr',document.getElementById('pac-input').value,20);";
-$fjs .= "javascript:setCookie('biz',document.getElementById('biz').value,20);";
-$fjs .= "javascript:setCookie('name',document.getElementById('name').value,20);";
-$fjs .= "javascript:setCookie('type',document.getElementById('type').value,20);";
+$menu = '
+  <h3>Menu</h3>
+  <li>
+    <ul onclick="menuList(\'newclient.php\');">Look at me!</ul>
+  </li>
+';
+
+
 ?>
-<section style="background-color:lightgray">
-<div id="horizontal-mobi" style="width:100%;height:70px;position:fixed;background-image:url('blacksand.jpg')">
-<b style="font-size:38;color:gray">Welcome to Diads!</b><br>
-<form method="GET">
-<b style="color:gray;">Enter your company's contact information : </b>
-<input id="name" type="text" name="name" placeholder="Contact Person">
-<input id="biz" type="text" name="biz" placeholder="Name of Business">
-<input id="pac-input" name="address" type="text" placeholder="St. No, Street, City, State, Zip, Country">
-<input id="type" type="text" name="type" placeholder="Type of Establishment">
-<button onclick="<?=$fjs?>submit">Hello!</button>
-</form>
+<!--  side menu -->
+<section id="menu" style="display:none">
+  <div style="background:black;width:300px;margin-top:95px;height:100%;z-index:4;position:fixed">
+    <div>
+      <article id="menu-article" style="margin-left:15px;color:white">
+        <?php echo $menu; ?>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="page" style="width:100%">
+<div class="horizontal-mobi">
+<div class="table-mobi" style="width:100%;">
+<dd>
+<div id="map" style="position:relative;z-index:1"></div>
+</dd>
+</div>
 </div>
 </section>
 
-<section>
-<div class="horizontal-mobi" style="z-index:3">
-<div class="table-mobi">
-<article style="height:50%;margin-top:70px;position:fixed;width:300;border-radius: 10px;border: 5px solid lightgray;">
-<div id="map"></div>
-</article>
-</div>
-</div>
-</section>
-<section style="background-color:gray">
-  <div class="horizontal-mobi" style="margin-top:400px;padding-bottom:17px;background-color:gray;overflow-x:visible;overflow-y:none;">
-    <div class="table-mobi">
-      <article>
+<section id="following" style="background:url('blacksand.jpg');margin-top:95px">
+
 <?php for ($j = 0 ; $j < count($Storename) ; $j++) { ?>
-  <section>
-  <?php $t = '100%';
-    if (count($serial[$j]) <= 3)
-      $t = count($serial[$j]) * 400 . "px";
-  ?>
-    <div class="horizontal-mobi" style="margin-top:<?=($j+1)*400?>;width:<?=$t?>;padding-bottom:17px;background-color:gray;overflow:visible;">
 
-    <div class="table-mobi">
+    <div class="horizontal-mobi" style="width:100%;background:opacity(0);">
+
+     <div class="table-mobi" style="position:static;">
 
 <?php for ($i = 0 ; $i < count($serial[$j]) ; $i++) { ?>
-    <article name="" serial="<?=$serial[$j][$i]?>" class="card" style="margin-top:<?=($i)*400?>;background-color:gray;width:400px;border-radius: 10px;border: 5px solid lightgray;">
+    <article serial="<?=$serial[$j][$i]?>" class="card" style="margin-left:<?=($i)*750?>px;background:opacity(0);width:750px;border-radius: 10px;border: 5px solid lightgray;">
         <b><i><?=$Storename[$j]?></i></b>
-        <hr style="height:1px">
+        <hr style="height:1px;width:750px">
         <b><?=$Storeslogan[$j]?></b><br>
         &#11088;&#11088;&#11088;&#11088;&#127775;<br>
-        <i>Review Now! !</i> <c class="star" onclick="javascript:confirm_star(1,<?=$serial[$j][$i]?>)">&#9734;</c><c class="star" onclick="javascript:confirm_star(2,<?=$serial[$j][$i]?>)">&#9734;</c><c class="star" onclick="javascript:confirm_star(3,<?=$serial[$j][$i]?>)">&#9734;</c><c class="star" onclick="javascript:confirm_star(4,<?=$serial[$j][$i]?>)">&#9734;</c>
-
+        <b style="z-index:2;"><i>Review Now! !</i>
+        <?php for ($k = 0 ; $k < 5 ; $k++) { ?>
+          <c class="star" onclick="javascript:confirm_star((<?=$k?>+1),<?=$serial[$j][$i]?>)">&#9734;</c>
+        <?php } ?>
+        </b>
     </article>
 <?php } ?>
-    </div>
-    </div></section>
+
+  </div>
+  </div>
 
 <?php 
 }
 ?>
-</article>
-</div>
-</div>
 </section>
-
 </body>
 </html>
