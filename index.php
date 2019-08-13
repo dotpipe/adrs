@@ -42,8 +42,9 @@ Diads - Follow your Best Deals
   }
   #map {
     top:95px;
+    background:url('blacksand.jpg');
     position:relative;
-    height: 100%;
+    height: 80%;
     width: 100%;
   }
   html, body {
@@ -231,7 +232,7 @@ function mapView() {
 
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC6nPPAMCGMzGcTS-HOkT1FXCJ3AqwV2V4&libraries=places&callback=honey"
   async defer></script>
-
+  <meta content="Diads is your best place to advertise. Get Followers, Preordering, Reviews from customers and much more." name="description">
 </head>
 
 <body style="background:url('blacksand.jpg');" onload="move();">
@@ -271,7 +272,7 @@ $menu = '<h3 onclick="menuList(\'menu.php\');">Menu</h3><li><b style="font-size:
   </div>
 </section>
 
-<section id="page" style="width:100%">
+<section id="page" style="background:url('blacksand.jpg');width:100%">
 <div class="horizontal-mobi">
 <div class="table-mobi" style="width:100%;">
 <dd>

@@ -112,6 +112,7 @@ function collectXML (position) {
 });
 }
 
+
 function focusStore(address) {
   setCookie("addy", address);
   fetch('getstore.php?a=' + getCookie("addy"), function() {})
@@ -203,6 +204,7 @@ function createMarker(place) {
   });
 
   google.maps.event.addListener(marker, 'click', function() {
+    console.log(this);
     fetch('test.php')
     .then(function(response) {
       console.log(response);
@@ -377,6 +379,7 @@ function move() {
       });
   }
   
+
   function addNewItem() {
     var h = document.getElementById("preorders");
     var p = h.firstChild.cloneNode(true);
@@ -384,15 +387,14 @@ function move() {
     p.setAttribute("pos", x);
     var t = p.firstChild;
     var i = 0;
-    var c = p.firstChild.childElementCount;
-    while (p.firstChild.hasChildNodes && i < c && p.firstChild.childNodes[i].tagName != "BUTTON") {
+    var c = t.childElementCount;
+    do {
       console.log(p.firstChild.childNodes[i].tagName);
       i++;
-    }
-    if (p.firstChild.childNodes[i].tagName == "BUTTON") {
-      p.firstChild.childNodes[i].setAttribute("pos", x);
-      h.appendChild(p);
-    }
+    } while (i <= c && p.firstChild.childNodes[i].tagName != "BUTTON");
+
+    p.firstChild.childNodes[i].setAttribute("pos", x);
+    h.appendChild(p);
   }
 
   function removeItem(i) {

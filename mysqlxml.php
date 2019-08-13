@@ -17,19 +17,21 @@ foreach ($xml->children() as $row) {
     $addr = "";
     $city = ""; $st = ""; $zip = ""; $cntry = "";
     if ($t_addr != null) {
+        $index = 0;
         $holder = str_getcsv($t_addr);
-        $addr = trim(mysqli_real_escape_string($conn,$holder[0]));
-        $addr = $addr . " " . trim(mysqli_real_escape_string($conn,$holder[1]));
-        $city = trim(mysqli_real_escape_string($conn,$holder[2]));
+        $addr = trim(mysqli_real_escape_string($conn,$holder[$index++]));
+        if (count($holder) >= 5)
+            $addr = $addr . " " . trim(mysqli_real_escape_string($conn,$holder[$index++]));
+        $city = trim(mysqli_real_escape_string($conn,$holder[$index++]));
         echo $t_addr;
-        $st = trim(mysqli_real_escape_string($conn,$holder[3]));
+        $st = trim(mysqli_real_escape_string($conn,$holder[$index++]));
         if (is_integer($holder[4])) {
-            $zip = trim(mysqli_real_escape_string($conn,$holder[4]));
-            $cntry = trim(mysqli_real_escape_string($conn,$holder[5]));
+            $zip = trim(mysqli_real_escape_string($conn,$holder[$index++]));
+            $cntry = trim(mysqli_real_escape_string($conn,$holder[$index++]));
         }
         else {
             $zip = 00000;
-            $cntry = trim(mysqli_real_escape_string($conn,$holder[4]));
+            $cntry = trim(mysqli_real_escape_string($conn,$holder[$index++]));
         }
     }
     $img_dir = md5($ph . "xiv" . $no) ;
@@ -56,7 +58,9 @@ foreach ($xml->children() as $row) {
 if ($affectedRow > 0) {
     $message = $affectedRow . " records inserted";
     echo $message;
-    file_put_contents('stores.xml', '<?xml version="1.0"?><markers></markers>');
+//    file_put_contents('stores.xml', '<?xml version="1.0"
+?><?php //<markers></markers>'); ?>
+<?php
 } else {
     $message = "No records inserted";
     echo $message;
