@@ -407,3 +407,24 @@ function move() {
     else
       h.removeChild(k[x]);
   }
+
+  function makePreorder() {
+    var g = document.getElementsByTagName("input");
+    var z = [null];
+    var y = [null];
+    
+    for (i = 0 ; i < g.length ; i++) {
+        if (g[i].className == "item")
+          z.unshift(g[i].value);
+        else {
+          y.unshift(g[i].value);
+        }
+    }
+    fetch('preorderxml.php?a=' + encodeURI(z) + "&b=" + encodeURI(y))
+    .then(function(response) {
+      return response.json();
+    })
+    .then(function(j) {
+      console.log(JSON.stringify(j));
+    });
+  }
