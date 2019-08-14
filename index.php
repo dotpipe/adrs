@@ -261,7 +261,7 @@ function mapView() {
 <?php
 $menu = '<h3 onclick="menuList(\'menu.php\');">Menu</h3><li><b style="font-size:18px;color:lightgray" onclick="javascript:mapView()">Click to Toggle Map</b><ul onclick=menuList(\'newclient.php\');>Add Store</ul><ul onclick=menuList(\'storechat.php\');>Cheri</ul><ul onclick="menuList(\'preorder.php\');">Preorder</ul></li>';
 ?>
-<!--  side menu -->
+<!-- Side menu -->
 <section id="menu" style="display:none">
   <div style="background:black;width:300px;margin-top:95px;height:100%;z-index:4;position:fixed">
     <div>

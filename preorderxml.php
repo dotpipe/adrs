@@ -13,6 +13,9 @@
     $a = $_GET['a'];
     $b = $_GET['b'];
     for ($i = 0 ; $i < count($z) ; $i++) {
+        if ($z[$i]->getAttribute("name") == "" ||
+            $z[$i]->getAttribute("quantity") == "")
+            continue;
         $a .= "," . $z[$i]->getAttribute("name");
         $b .= "," . $z[$i]->getAttribute("quantity");
     //    echo json_encode(".");
@@ -20,7 +23,7 @@
     $varA = str_getcsv($a,",");
     $varB = str_getcsv($b,",");
     foreach ($varA as $v) {
-        if ($v == null) {
+        if ($v == null || $v == "" || $varB[$i] == "") {
             $i++;
             continue;
         }
