@@ -2,13 +2,57 @@
 var datarray = [];
 var ADDR;
 
+function startChat() {
+  var text;
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+          fillChat(this);
+      }
+  };
+  xhttp.open("GET", getCookie("chatfile"), true);
+  xhttp.send();
+  
+  }
+
+  function fillChat(xml) {
+    var y, z, i, yLen, xmlDoc, txt;
+    xmlDoc = xml.responseXML;
+    txt = "";
+    // Output all chat lines
+    z = xmlDoc.getElementsByTagName("messages")[0];
+    y = z.childNodes;
+    yLen = y.length;
+    for (i = 0; i < yLen; i++) { 
+        if (y[i].getAttribute("user") == getCookie("iam")) {
+          txt += '<div style="opacity:0.5;background:gray;color:white;width:100%">';
+          txt += y[i].childNodes[0].nodeValue + '</div>';
+        }
+        else 
+          txt += y[i].childNodes[0].nodeValue + "<br>";
+    }
+    var t = document.getElementById("chatwindow");
+    t.innerHTML = txt;
+    if (document.getElementById("startchat").getAttribute("loaded") == "0") {
+      document.getElementById("startchat").setAttribute("loaded","1");
+      document.getElementById("startchat").setAttribute("onmouseover","");
+      t.scrollTop = t.childElementCount*18;
+    }
+}
+
+
 function goChat(i,j) {
     if (j == 13) {
       var x = document.getElementById("chatwindow");
       var y = i.cloneNode();
-      x.innerHTML += y.value + "<br>";
+      x.innerHTML += '<div style="background:gray;color:white;width:100%">' + y.value + "</div>";
       fetch("chat.php?a=" + y.value);
+      x.scrollTop = x.childElementCount*18;
       i.value = "";
+    }
+    if (document.getElementById("chatwindow").innerHTML == "&nbsp;") {
+      //document.getElementById("chatwindow").innerHTML = "";
+      startChat();
     }
 }
 
@@ -364,11 +408,11 @@ function move() {
         honey();
   }
 
-  function fillChat(i) {
-    document.getElementById("chatwindow").style.wordWrap = "true";
+//  function fillChat(i) {
+  //  document.getElementById("chatwindow").style.wordWrap = "true";
 
-    document.getElementById("chatwindow").innerText = i.substring(1,i.length-2);
-  }
+    //document.getElementById("chatwindow").innerText = i.substring(1,i.length-2);
+  //}
   
   function cheriWindow(i) {
     var url = 'fmcht.php?' + i;

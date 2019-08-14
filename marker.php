@@ -30,6 +30,5 @@
    $x->appendChild($tmp);
    $dom->appendChild($x);
    $dom->save("stores.xml");
-   header("Location: mysqlxml.php");
 header("Location: ./");
 ?>

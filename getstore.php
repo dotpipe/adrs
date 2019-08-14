@@ -1,6 +1,6 @@
 <?php
 $x = urldecode($_GET['a']);
-$y = str_getcsv($x, ", ");
+$y = str_getcsv($x, ",");
 $conn = mysqli_connect("localhost","root","","adrs");
 $z = [];
 if (mysqli_connect_errno()) {
@@ -23,9 +23,11 @@ if ($results->num_rows > 0) {
     setcookie("stores",$rows['store_name']);
     setcookie("id",$rows['store_uniq']);
     setcookie("contact",$rows['store_creditor']);
+    setcookie("iam", session_id());
+    setcookie('chatfile',md5($_COOKIE['iam'] . "chat" . $_COOKIE['id']) . ".xml");
 }
 else
-    setcookie("stores",'Not a valid Store');
+    setcookie("stores",$x);
 $results->close();
 $conn->close();
 
