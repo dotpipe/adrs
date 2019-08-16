@@ -2,10 +2,10 @@
     if (!isset($_SESSION))
         session_start();
     if (!isset($_COOKIE['iam']))
-        setcookie("iam", session_id());
-    $filename = md5($_COOKIE['iam'] . "chat" . $_COOKIE['id']) . ".xml";
+        setcookie("iam", session_id(),time()+60*60);
+    $filename = "xml/" . md5($_COOKIE['iam'] . "chat" . $_COOKIE['id']) . ".xml";
     
-    setcookie('chatfile',md5($_COOKIE['iam'] . "chat" . $_COOKIE['id']) . ".xml");
+    setcookie('chatfile',"xml/" . md5($_COOKIE['iam'] . "chat" . $_COOKIE['id']) . ".xml",time()+60*60);
     if (!file_exists($filename))
         file_put_contents($filename, '<?xml version="1.0"?><messages></messages>');
 

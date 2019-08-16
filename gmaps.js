@@ -2,8 +2,54 @@
 var datarray = [];
 var ADDR;
 
+function login() {
+  if (localStorage.getItem("iam") != undefined) {
+    setCookie("PHPSESSID",localStorage.getItem("iam"));
+    setCookie("iam",localStorage.getItem("iam"));
+  }
+  else
+    localStorage.setItem("iam",getCookie("PHPSESSID"));
+  if (document.getElementById("remember").value == true)
+    localStorage.setItem("remember", true);
+  else
+    localStorage.setItem("remember", false);
+  setCookie("iam", localStorage.getItem("iam"));
+  menuList('menu.php');
+  setCookie("count",0);
+}
+
+function loginUnsuccessful() {
+  var y = getCookie("count");
+  y++;
+  setCookie("count", y);
+  document.getElementById("warning").value = "Wrong Email/Password (" + y + "/3)";
+  menuList('login.php');
+}
+
+function logout() {
+  var x = document.getElementById("email").value;
+  var y = document.getElementById("password").value;
+  
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        return;
+      }
+  };
+  xhttp.open("GET", "nologin.php", true);
+  xhttp.send();
+
+  localStorage.clear();
+}
+
+function unload() {
+  if (localStorage.getItem("remember") == false)
+    logout();
+}
+
 function startChat() {
-  var text;
+  if (getCookie("chatfile") == undefined)
+    return;
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
@@ -54,6 +100,21 @@ function goChat(i,j) {
       //document.getElementById("chatwindow").innerHTML = "";
       startChat();
     }
+}
+
+function checkValue(t) {
+  if (t.value.length > 1)
+    return;
+  if (t.value.length != 0) {
+    var x = document.getElementsByClassName("bizreq");
+    for (i = 0 ; i < x.length ; i++)
+      x[i].required = "true";
+  }
+  else {
+    var x = document.getElementsByClassName("bizreq");
+    for (i = 0 ; i < x.length ; i++)
+      x[i].required = "false";
+  }
 }
 
 function clearChat() {
@@ -303,7 +364,7 @@ function confirm_star(i,ts) {
 
 function setCookie(cname, cvalue, exdays) {
   var d = new Date();
-  d.setTime(d.getTime() + (exdays*24*60*60*1000));
+  d.setTime(d.getTime() + (24*60*60*1000));
   var expires = "expires="+ d.toUTCString();
   document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
 }
@@ -397,11 +458,12 @@ function move() {
   function menuList(i) {
     fetch(i, function() {})
       .then(function(response){
-      //  console.log(response.json());
-      return response.json();
+        return response.json();
       })
       .then(function(j) {
-        
+        console.log(getCookie("login"));
+        if (document.cookie.count == 3)
+          return;
         fillMenu(JSON.stringify(j));
       });
       if (i === "newclient.php")

@@ -1,6 +1,6 @@
 <?php
-//if (!isset($_COOKIE['stores']) || $_COOKIE['stores'] == "new" || $_COOKIE['stores'] == "")
-//    setcookie("stores", "from stores!");
+if (!isset($_COOKIE['stores']))
+    setcookie("stores", "from stores!");
 $form = '<h3 onclick=menuList(\'menu.php\');>Menu</h3><li><b style="font-size:18px;color:lightgray;" onclick=javascript:mapView()>Click to Toggle Map</b><br><br>';
 $form .= '<font style=\'font-size:16;color:red;\'>Preorder Items ' . $_COOKIE['stores'] . '</font><br>';
 $form .= '<div id=\'preorders\'><div>';
@@ -11,7 +11,6 @@ $form .= '</div></div>';
 $form .= '<div style="margin-left:200px;display:table-cell;text-align:right"><button style="background:black;border-radius:50%;font-size:18px" onclick=\'addNewItem()\'>+</button></div>';
 $form .= '<div style="margin-left:300px;display:table-cell;text-align:right"><button style="background:black;color:green;border-radius:50%;font-size:18px" onclick=\'makePreorder()\'>&check;</button></div>';
 
-$f = str_replace('"',"\'",$form);
 echo json_encode($form);
 
 ?>

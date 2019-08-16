@@ -23,19 +23,6 @@ function glaze(address) {
 
 function collectXML (position) {
   var t = position.coords;
-  /*
-  if (countCookies() > 4) {
-    var lt = encodeURIComponent(t.latitude);
-    var lg = encodeURIComponent(t.longitude);
-    console.log(getCookie('addr'));
-    var b = encodeURI("marker.php"); //?address=" + getCookie('address') + "&lat=" + lt + "&long=" + lg + "&business=" + getCookie('business') + "&name=" + getCookie('name') + "&type=" + getCookie('type'));
-    passPOST(b);
-    setCookie('addr',"");
-    setCookie('biz',"");
-    setCookie('name',"");
-    setCookie('type',"");
-  }
-  */
   var map = new google.maps.Map(
     document.getElementById('map'),
     {center: {lat: position.coords.latitude, lng: position.coords.longitude}, zoom: 13});

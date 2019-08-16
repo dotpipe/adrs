@@ -7,7 +7,7 @@
 	$arr[$k] = $v;
   }
   for ($i = 0; $i < count($list); $i++) {
-	if ($list[$i]['address'] == $arr['address']) {
+	if ($list[$i]['email'] == $arr['email']) {
 		
 		header("Location: ./");
 		return;

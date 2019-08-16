@@ -1,6 +1,16 @@
 <?php
 
-$form = '<h3 onclick=menuList(\'menu.php\');>Menu</h3><li><b style="font-size:18px;color:lightgray" onclick="javascript:mapView()">Click to Toggle Map</b></li><form method="POST" action="marker.php"><label style="color:lightgray;">Enter your<br>company\'s contact<br>information <i style="color:red">required</i> <b style="color:red">*</b> : </label><br><b style="color:red">*</b> <input required id="name" type="text" name="name" placeholder="Contact Person"><br><b style="color:red">*</b> <input required id="biz" type="text" name="business" placeholder="Name of Business"><br><b style="color:red">*</b> <input required id="addr" style="background:white" name="address" type="text" placeholder="St. No, Street, City, State, Zip, Country"><br><b style="color:red">*</b> <input required id="no" style="background:white" name="no" type="text" placeholder="Store Number"><br><b style="color:red">*</b> <input required id="ph" style="background:white" name="phone" type="text" placeholder="Phone Number"><br><b style="color:red">*</b> <input required id="type" type="text" name="type" placeholder="Type of Establishment"><button onclick="submit">Welcome!</button><br></form></div>';
+$form = '<h3 onclick=menuList(\'menu.php\');>Menu</h3><li>';
+$form .= '<b style="font-size:18px;color:lightgray" onclick="javascript:mapView()">Click to Toggle Map</b></li>';
+$form .= '<form method="POST" action="marker.php"><label style="color:lightgray;">Enter your<br>Direct contact<br>information ';
+$form .= '<i style="color:red">required</i> <b style="color:red">*</b> : </label><br>';
+$form .= '<input required id="email" type="email" name="email" placeholder="Email"> <b style="color:red">*</b><br>';
+$form .= '<input required id="name" type="text" name="name" placeholder="Contact Person"> <b style="color:red">*</b><br>';
+$form .= '<input required id="alias" type="text" name="alias" placeholder="Alias for Chat"> <b style="color:red">*</b><br>';
+$form .= '<input required id="password" type="password" name="password" placeholder="Password"> <b style="color:red">*</b><br>';
+$form .= '<input required class="bizreq" id="ph" style="background:white" name="phone" type="text" placeholder="Phone Number"> <b style="color:red">*</b><br>';
+$form .= '<button onclick="submit">Welcome!</button><br>';
+$form .= '</form></div>';
 
 $f = str_replace('"','\'',$form);
 echo json_encode($f);

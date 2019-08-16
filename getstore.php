@@ -20,14 +20,14 @@ else
 
 if ($results->num_rows > 0) {
     $rows = $results->fetch_assoc();
-    setcookie("stores",$rows['store_name']);
-    setcookie("id",$rows['store_uniq']);
-    setcookie("contact",$rows['store_creditor']);
-    setcookie("iam", session_id());
-    setcookie('chatfile',md5($_COOKIE['iam'] . "chat" . $_COOKIE['id']) . ".xml");
+    setcookie("stores",$rows['store_name'],time()+60*60);
+    setcookie("id",$rows['store_uniq'],time()+60*60);
+    setcookie("contact",$rows['store_creditor'],time()+60*60);
+    setcookie("iam", session_id(),time()+60*60);
+    setcookie('chatfile',"xml/" . md5($_COOKIE['iam'] . "chat" . $_COOKIE['id']) . ".xml",time()+60*60);
 }
 else
-    setcookie("stores",$x);
+    setcookie("stores","stores!",time()+60*60);
 $results->close();
 $conn->close();
 

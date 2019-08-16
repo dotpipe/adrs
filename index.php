@@ -34,6 +34,16 @@ $serial[2][0] = "14123";
 Diads - Follow your Best Deals
 </title>
 <style>
+  div #policy-terms {
+    top:70px;
+    position: absolute;
+    float:left;
+    margin-left:575px;
+    text-decoration:underline;
+    width:900px;
+    color:#fefefe;
+    z-index: 1 !important;
+  }
   div #menu {
     top:110px;
     position: fixed;
@@ -235,7 +245,7 @@ function mapView() {
   <meta content="Diads is your best place to advertise. Get Followers, Preordering, Reviews from customers and much more." name="description">
 </head>
 
-<body style="background:url('blacksand.jpg');" onload="move();">
+<body style="background:url('blacksand.jpg');" onload="move();" onunload="">
 <!-- Loading Progress bar -->
 <div id="myProgress" style="position:fixed">
   <div id="myBar"></div>
@@ -254,12 +264,29 @@ function mapView() {
 </div>
 
 <div class="horizontal-mobi" style="cursor:default;width:100%;margin-left:75px;height:105px;margin-top:20px;position:fixed;">
-<br><b style="font-size:28px;color:#fefefe">Welcome to Diads!</b>
+<br>
+<div style="position:fixed;display:table-cell;font-size:28px;color:#fefefe">Welcome to Diads!</div>
+<div id="policy-terms" style="vertical-alignment:middle;position:fixed;left:500px;display:table-cell;"><a style="color:#fefefe" href="privacy_policy.pdf">Privacy Policy</a> and <a style="color:#fefefe" href="terms.pdf">Terms</a></div>
 </div>
 </div>
 </section>
 <?php
-$menu = '<h3 onclick="menuList(\'menu.php\');">Menu</h3><li><b style="font-size:18px;color:lightgray" onclick="javascript:mapView()">Click to Toggle Map</b><ul onclick=menuList(\'newclient.php\');>Add Store</ul><ul onclick=menuList(\'storechat.php\');>Cheri</ul><ul onclick="menuList(\'preorder.php\');">Preorder</ul></li>';
+$menu = "";
+if (isset($_COOKIE) && isset($_COOKIE['login']) && $_COOKIE['login'] == "true") {
+  $menu = '<h3 onclick="menuList(\'menu.php\');">Menu</h3><li>';
+  $menu .= '<b style="font-size:18px;color:lightgray" onclick="javascript:mapView()">';
+  $menu .= 'Click to Toggle Map</b><ul onclick=menuList(\'linkclient.php\');>Link Account!</ul>';
+  $menu .= '<ul onclick=menuList(\'storechat.php\');>Cheri</ul>';
+  $menu .= '<ul onclick="menuList(\'preorder.php\');">Preorder</ul>';
+  $menu .= '<ul onclick="menuList(\'inbox.php\');">Inbox</ul>';
+  $menu .= '<ul><a href="nologin.php" style="color:white;text-decoration:none;font-size:18px;">Logout</a></ul></li>';
+}
+else {
+  $menu = '<h3 onclick="menuList(\'menu.php\');">Menu</h3><li>';
+  $menu .= '<b style="font-size:18px;color:lightgray" onclick="javascript:mapView()">';
+  $menu .= 'Click to Toggle Map</b><ul onclick=menuList(\'newclient.php\');>Create Account!</ul>';
+  $menu .= '<ul onclick=menuList(\'login.php\');>Login</ul></li>';
+}
 ?>
 <!-- Side menu -->
 <section id="menu" style="display:none">
